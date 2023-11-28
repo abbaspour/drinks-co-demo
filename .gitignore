@@ -1,0 +1,8 @@
+*.auto.tfvars
+.idea
+*.tfstate
+*.tfstate.backup
+.terraform
+*.plan
+*.lock.hcl
+.rendered
