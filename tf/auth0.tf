@@ -1,11 +1,12 @@
 locals {
   beans_blend_domain = "${var.beans_blend_subdomain}.vercel.app"
   fizzy_fusion_domain = "${var.fizzy_fusion_subdomain}.vercel.app"
+  drinks_co_domain = "${var.fizzy_fusion_subdomain}.vercel.app"
 }
 
 resource "auth0_tenant" "tenant_config" {
   friendly_name = "Drinks Co Branding Demo"
-  default_redirection_uri = "https://${local.beans_blend_domain}"
+  default_redirection_uri = "https://${local.drinks_co_domain}"
 
   flags {
     enable_client_connections = false
@@ -32,6 +33,7 @@ resource "auth0_client" "beans_blend" {
   app_type = "spa"
   oidc_conformant = true
   is_first_party = true
+  logo_uri = "https://drinks-co.vercel.app/img/beans-blend-logo.png"
 
   callbacks = [
     "https://jwt.io",
@@ -65,6 +67,7 @@ resource "auth0_client" "fizzy_fusion" {
   app_type = "spa"
   oidc_conformant = true
   is_first_party = true
+  logo_uri = "https://drinks-co.vercel.app/img/fizzy-fusion-logo.png"
 
   callbacks = [
     "https://jwt.io",
@@ -97,20 +100,21 @@ resource "auth0_connection_clients" "brands_central_user_store" {
   enabled_clients = [auth0_client.beans_blend.id, auth0_client.fizzy_fusion.id, var.auth0_tf_client_id]
 }
 
-## TODO Branding
-/*
 resource "auth0_branding" "brand" {
-  logo_url = "https://upload.wikimedia.org/wikipedia/en/thumb/d/d0/Service_NSW_Logo.png/440px-Service_NSW_Logo.png"
-  favicon_url = "https://www.lesmills.com.au/themes/lmap/favicon/favicon.ico"
-}
-
-resource "auth0_pages" "cul_pages" {
-  login {
-    enabled = true
-    html    = file("../ul/classic.html")
+  logo_url = "https://drinks-co.vercel.app/img/drinks-co-logo.png"
+  colors {
+    primary         = "#B0BEC5"
+    page_background = "#0D47A1"
   }
 }
-*/
+
+resource "auth0_pages" "classic" {
+  login {
+    enabled = true
+    html    = file("../ul/lock.html")
+  }
+}
+
 
 ## Users
 resource "auth0_user" "user_1" {

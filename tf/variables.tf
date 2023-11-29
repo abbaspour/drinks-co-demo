@@ -38,6 +38,11 @@ variable "fizzy_fusion_subdomain" {
   default = "fizzy-fusion"
 }
 
+variable "drinks_co_subdomain" {
+  type = string
+  default = "drinks-co"
+}
+
 ## mailtrap
 variable "mailtrap_smtp_user" {
   type = string
