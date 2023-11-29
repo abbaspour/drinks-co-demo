@@ -5,7 +5,7 @@ resource "vercel_project" "drinks_co" {
 
 data "vercel_project_directory" "static_files" {
   depends_on = [local_file.beans_blend_css, local_file.fizzy_fusion_css]
-  path = "../static"
+  path = "../ul/dist"
 }
 
 resource "vercel_deployment" "drinks_co_deployment" {
