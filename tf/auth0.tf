@@ -111,7 +111,7 @@ resource "auth0_branding" "brand" {
 resource "auth0_pages" "classic" {
   login {
     enabled = true
-    html    = file("../shadcn-ul/dist/index.html")
+    html    = file("../ul/dist/index.html")
   }
 }
 
