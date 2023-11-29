@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 const createAuthClient = (config: string): WebAuth => {
 
-    console.log(`config: ${config}`);
+    //console.log(`config: ${config}`);
 
     let auth0Config: any = {};
 
@@ -16,10 +16,7 @@ const createAuthClient = (config: string): WebAuth => {
         auth0Config = JSON.parse(decodeURIComponent(window.atob(config)));
     } catch (error) {
         throw error;
-        //auth0Config = error;
     }
-
-    console.log(`auth0Config: ${JSON.stringify(auth0Config)}`);
 
     if (!auth0Config?.auth0Tenant) {
         throw new Error('Invalid Auth0 config.');

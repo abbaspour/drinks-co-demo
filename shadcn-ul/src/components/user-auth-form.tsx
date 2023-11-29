@@ -24,6 +24,7 @@ interface LoginFormElement extends HTMLFormElement {
 
 export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = React.useState<string>('');
 
     async function onSubmit(event: React.FormEvent<LoginFormElement>) {
         event.preventDefault()
@@ -33,19 +34,22 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
             setIsLoading(false)
         }, 3000)
 
-        console.log(event);
         createAuthClient(config).login({
                 username: event.currentTarget.email.value,
                 password: event.currentTarget.password.value,
                 realm: 'Users'
             },
             (err) => {
-                console.log(err);
+                if (err)
+                    setErrorMessage(err.policy || err.description || '');
             });
     }
 
     return (
         <div className={cn("grid gap-6", className)} {...props}>
+            {errorMessage &&
+                <div className="error"> {errorMessage} </div>
+            }
             <form onSubmit={onSubmit}>
                 <div className="grid gap-2">
                     <div className="grid gap-1">
@@ -54,7 +58,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                         </Label>
                         <Input
                             id="email"
-                            placeholder="user1@atko.email"
+                            placeholder=""
                             type="email"
                             autoCapitalize="none"
                             autoComplete="email"
@@ -68,7 +72,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                         </Label>
                         <Input
                             id="password"
-                            placeholder="password"
+                            placeholder=""
                             type="password"
                             autoCapitalize="none"
                             autoComplete="off"
@@ -80,7 +84,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                         )}
-                        Sign In with Email
+                        Sign In
                     </Button>
                 </div>
             </form>
