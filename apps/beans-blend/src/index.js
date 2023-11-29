@@ -23,6 +23,7 @@ const providerConfig = {
   onRedirectCallback,
   authorizationParams: {
     redirect_uri: window.location.origin,
+    connection: 'Users', // todo: inject to config with TF
     ...(config.audience ? { audience: config.audience } : null),
   },
 };
