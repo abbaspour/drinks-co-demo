@@ -1,14 +1,26 @@
-## UL
-# brand A
+## CSS
+# Beans Blend
 resource "local_file" "beans_blend_css" {
   content  = file("../css/beans-blend.css")
   filename = "../public/css/${auth0_client.beans_blend.client_id}.css"
 }
 
-# brand B
+# Fizzy Fusion
 resource "local_file" "fizzy_fusion_css" {
   content  = file("../css/fizzy-fusion.css")
   filename = "../public/css/${auth0_client.fizzy_fusion.client_id}.css"
+}
+
+## Logo
+resource "local_file" "beans_blend_logo" {
+  content_base64  = filebase64("../logos/beans-blend-logo.png")
+  filename = "../public/logo/${auth0_client.beans_blend.client_id}.png"
+}
+
+# Fizzy Fusion
+resource "local_file" "fizzy_fusion_logo" {
+  content_base64  = filebase64("../logos/fizzy-fusion-logo.png")
+  filename = "../public/logo/${auth0_client.fizzy_fusion.client_id}.png"
 }
 
 ## Email Templates

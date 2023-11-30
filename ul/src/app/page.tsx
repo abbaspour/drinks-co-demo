@@ -15,23 +15,6 @@ export const metadata: Metadata = {
 export default function AuthenticationPage() {
     return (
         <>
-            <ClientLogo config={"@@config@@"}/>
-            <div className="md:hidden">
-                <Image
-                    src="/examples/authentication-light.png"
-                    width={1280}
-                    height={843}
-                    alt="Authentication"
-                    className="block dark:hidden"
-                />
-                <Image
-                    src="/examples/authentication-dark.png"
-                    width={1280}
-                    height={843}
-                    alt="Authentication"
-                    className="hidden dark:block"
-                />
-            </div>
             <div
                 className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
                 <Link
@@ -61,6 +44,7 @@ export default function AuthenticationPage() {
                         Drinks Co
                     </div>
                     <div className="relative z-20 mt-auto">
+                        <ClientLogo config={"@@config@@"}/>
                         <blockquote className="space-y-2">
                             <p className="text-lg">
                                 Crafting Moments, Pouring Joy.

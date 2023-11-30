@@ -16,10 +16,30 @@ export function ClientLogo({className, config, ...props}: ClientLogoProps) {
     }, [config]);
 
     return (
-        <div className={cn("grid gap-6", className)} {...props}>
-            {auth0Config &&
-                auth0Config.clientID
+        <div>
+            {auth0Config?.clientID &&
+                <img
+                    src={`https://drinks-co.vercel.app/logo/${auth0Config.clientID}.png`}
+                    alt="Client Logo"
+                    className="block dark:hidden"
+                />
             }
         </div>
     );
+
+    /*
+            <div className={cn("grid gap-6", className)} {...props}>
+                {auth0Config &&
+                    auth0Config.clientID
+                }
+                <Image
+                    src="/examples/authentication-light.png"
+                    width={1280}
+                    height={843}
+                    alt="Authentication"
+                    className="block dark:hidden"
+                />
+            </div>
+        );
+    */
 }

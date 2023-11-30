@@ -1,12 +1,15 @@
 locals {
   beans_blend_domain = "${var.beans_blend_subdomain}.vercel.app"
   fizzy_fusion_domain = "${var.fizzy_fusion_subdomain}.vercel.app"
-  drinks_co_domain = "${var.fizzy_fusion_subdomain}.vercel.app"
+  drinks_co_domain = "${var.drinks_co_subdomain}.vercel.app"
 }
 
 resource "auth0_tenant" "tenant_config" {
   friendly_name = "Drinks Co Branding Demo"
   default_redirection_uri = "https://${local.drinks_co_domain}"
+  allowed_logout_urls = [
+    "https://${local.drinks_co_domain}"
+  ]
 
   flags {
     enable_client_connections = false
