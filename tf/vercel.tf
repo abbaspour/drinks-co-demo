@@ -3,15 +3,20 @@ resource "vercel_project" "drinks_co" {
   name      = "drinks-co"
 }
 
-data "vercel_project_directory" "static_files" {
-  depends_on = [local_file.beans_blend_css, local_file.fizzy_fusion_css]
-  path = "../ul/dist"
+data "vercel_project_directory" "public_files" {
+  depends_on = [
+    local_file.beans_blend_css,
+    local_file.fizzy_fusion_css,
+    local_file.beans_blend_logo,
+    local_file.fizzy_fusion_logo
+  ]
+  path = "../public"
 }
 
 resource "vercel_deployment" "drinks_co_deployment" {
   project_id  = vercel_project.drinks_co.id
-  files       = data.vercel_project_directory.static_files.files
-  path_prefix = data.vercel_project_directory.static_files.path
+  files       = data.vercel_project_directory.public_files.files
+  path_prefix = data.vercel_project_directory.public_files.path
   production  = true
 }
 

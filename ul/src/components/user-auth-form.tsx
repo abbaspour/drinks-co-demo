@@ -2,12 +2,13 @@
 
 import * as React from "react"
 
-import {cn} from "@/lib/utils"
+import {Auth0Config, cn, parseAuth0Config} from "@/lib/utils"
 import {Icons} from "@/components/icons"
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {createAuthClient} from "@/lib/utils";
+import {useEffect} from "react";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     config: string
@@ -25,6 +26,11 @@ interface LoginFormElement extends HTMLFormElement {
 export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const [errorMessage, setErrorMessage] = React.useState<string>('');
+    const [auth0Config, setAuth0Config] = React.useState<Auth0Config>();
+
+    useEffect(() => {
+        setAuth0Config(parseAuth0Config(config));
+    }, [config]);
 
     async function onSubmit(event: React.FormEvent<LoginFormElement>) {
         event.preventDefault()

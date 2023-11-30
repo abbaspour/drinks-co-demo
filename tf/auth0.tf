@@ -1,12 +1,15 @@
 locals {
   beans_blend_domain = "${var.beans_blend_subdomain}.vercel.app"
   fizzy_fusion_domain = "${var.fizzy_fusion_subdomain}.vercel.app"
-  drinks_co_domain = "${var.fizzy_fusion_subdomain}.vercel.app"
+  drinks_co_domain = "${var.drinks_co_subdomain}.vercel.app"
 }
 
 resource "auth0_tenant" "tenant_config" {
   friendly_name = "Drinks Co Branding Demo"
   default_redirection_uri = "https://${local.drinks_co_domain}"
+  allowed_logout_urls = [
+    "https://${local.drinks_co_domain}"
+  ]
 
   flags {
     enable_client_connections = false
@@ -111,7 +114,7 @@ resource "auth0_branding" "brand" {
 resource "auth0_pages" "classic" {
   login {
     enabled = true
-    html    = file("../ul/dist/index.html")
+    html    = file("../public/ul/index.html")
   }
 }
 
@@ -145,8 +148,8 @@ resource "auth0_email_provider" "mailtrap" {
 }
 
 ## outputs
-output "beans_blend_client_id" {
-  value = auth0_client.beans_blend.id
+output "beans_blend_login_url" {
+  value = "https://${var.auth0_domain}/authorize?client_id=${auth0_client.beans_blend.id}&redirect_uri=https://jwt.io&response_type=id_token&connection=Users&nonce=nonce&prompt=login"
 }
 
 output "fizzy_fusion_client_id" {

@@ -6,6 +6,50 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
 }
 
+type InternalOptions = {
+    protocol: string,
+    scope?: string,
+    response_type?: string,
+    response_mode?: string,
+    nonce?: string,
+    code_challenge?: string,
+    code_challenge_method?: string,
+    auth0Client?: string,
+    _csrf: string,
+    _intstate?: string,
+    state: string,
+    leeway?: number
+}
+
+type  AuthorizationServer = {
+    url: string,
+    issuer: string
+}
+
+export interface Auth0Config {
+    icon: string,
+    assetsUrl: string,
+    auth0Domain: string,
+    auth0Tenant: string,
+    clientConfigurationBaseUrl: string,
+    callbackOnLocationHash: boolean,
+    callbackURL: string,
+    cdn: string,
+    clientID: string,
+    connection: string | null,
+    dict: object,
+    extraParams: object,
+    internalOptions: InternalOptions,
+    widgetUrl: string,
+    isThirdPartyClient: boolean,
+    authorizationServer: AuthorizationServer,
+    colors: object
+}
+
+export const parseAuth0Config = (config: string): Auth0Config => {
+    return JSON.parse(decodeURIComponent(window.atob(config)));
+}
+
 const createAuthClient = (config: string): WebAuth => {
 
     //console.log(`config: ${config}`);
