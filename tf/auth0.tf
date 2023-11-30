@@ -145,8 +145,8 @@ resource "auth0_email_provider" "mailtrap" {
 }
 
 ## outputs
-output "beans_blend_client_id" {
-  value = auth0_client.beans_blend.id
+output "beans_blend_login_url" {
+  value = "https://${var.auth0_domain}/authorize?client_id=${auth0_client.beans_blend.id}&redirect_uri=https://jwt.io&response_type=id_token&connection=Users&nonce=nonce&prompt=login"
 }
 
 output "fizzy_fusion_client_id" {

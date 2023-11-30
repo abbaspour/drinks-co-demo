@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && fgrep --color -o '@@config@@' ./dist/index.html && echo 'build successful'",
     "start": "next start",
     "lint": "next lint"
   },
