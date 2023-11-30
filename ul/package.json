@@ -1,9 +1,9 @@
 {
-  "name": "shadcn-ul",
+  "name": "nextjs-shadcn-auth0-ul",
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && fgrep --color -o '@@config@@' ./dist/index.html && echo 'build successful' || echo 'build INCOMPLETE' ",
+    "build": "next build && fgrep --color -o '@@config@@' ../public/ul/index.html && echo 'build successful' || echo 'build INCOMPLETE' ",
     "start": "next start",
     "lint": "next lint"
   },

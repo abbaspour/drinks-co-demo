@@ -2,13 +2,13 @@
 # brand A
 resource "local_file" "beans_blend_css" {
   content  = file("../css/beans-blend.css")
-  filename = "../static/css/${auth0_client.beans_blend.client_id}.css"
+  filename = "../public/css/${auth0_client.beans_blend.client_id}.css"
 }
 
 # brand B
 resource "local_file" "fizzy_fusion_css" {
   content  = file("../css/fizzy-fusion.css")
-  filename = "../static/css/${auth0_client.fizzy_fusion.client_id}.css"
+  filename = "../public/css/${auth0_client.fizzy_fusion.client_id}.css"
 }
 
 ## Email Templates
