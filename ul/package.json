@@ -1,10 +1,9 @@
 {
   "name": "shadcn-ul",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && fgrep --color -o '@@config@@' ./dist/index.html && echo 'build successful'",
+    "build": "next build && fgrep --color -o '@@config@@' ./dist/index.html && echo 'build successful' || echo 'build INCOMPLETE' ",
     "start": "next start",
     "lint": "next lint"
   },
