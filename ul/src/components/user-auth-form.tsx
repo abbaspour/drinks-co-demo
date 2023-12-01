@@ -8,7 +8,8 @@ import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {createAuthClient} from "@/lib/utils";
-import {useEffect} from "react";
+import {ReactNode, useEffect} from "react";
+import {WebAuth} from "auth0-js";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     config: string
@@ -23,32 +24,175 @@ interface LoginFormElement extends HTMLFormElement {
     readonly elements: FormElements
 }
 
+enum PasswordPolicy {
+    none = "none",
+    low = "low",
+    fair = "fair",
+    good = "good",
+    excellent = "excellent"
+}
+
+type PasswordComplexityOptions = {
+    min_length: number
+}
+
+type Connection = {
+    name: string,
+    passwordPolicy?: PasswordPolicy,
+    password_complexity_options?: PasswordComplexityOptions
+    showSignup?: boolean,
+    showForgot?: boolean,
+    requires_username?: boolean,
+    scope?: Array<string>
+    domain?: string,
+    domain_aliases?: Array<string>
+}
+
+
+type Strategy = {
+    name: string,
+    connections: Array<Connection>
+}
+
+type ClientConfig = {
+    id: string,
+    tenant: string,
+    subscription: string,
+    authorize: string,
+    callback: string,
+    hasAllowedOrigins: boolean,
+    strategies: Array<Strategy>
+}
+
+const CLIENT_JS_REGEX = /Auth0.setClient\((.+)\);$/;
+
 export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const [errorMessage, setErrorMessage] = React.useState<string>('');
     const [auth0Config, setAuth0Config] = React.useState<Auth0Config>();
+    const [clientConfig, setClientConfig] = React.useState<ClientConfig>();
+    const [webClient, setWebClient] = React.useState<WebAuth>();
 
     useEffect(() => {
-        setAuth0Config(parseAuth0Config(config));
+        const parsed = parseAuth0Config(config);
+        if (parsed) {
+            setAuth0Config(parsed);
+            const client = createAuthClient(parsed);
+            if (client)
+                setWebClient(client);
+        }
     }, [config]);
+
+    useEffect(() => {
+        if (!auth0Config || !auth0Config.auth0Domain || !auth0Config.clientID)
+            return;
+
+        const fetchClientJs = async (): Promise<ClientConfig> => {
+            const url = `https://${auth0Config.auth0Domain}/client/${auth0Config.clientID}.js`;
+            console.log('fetching client config from : ' + url)
+            const response = await window.fetch(url);
+            const clientJs = await response.text();
+            console.log(clientJs);
+            const matched = clientJs.match(CLIENT_JS_REGEX);
+            if (!matched || matched.length === 0)
+                return Promise.reject("no match");
+            const clientJson = matched[1];
+            console.log(clientJson);
+            return JSON.parse(clientJson)
+        }
+
+        fetchClientJs()
+            .then(cc => setClientConfig(cc))
+            .catch(e => {
+                console.log('failed fetch client', e);
+            })
+
+    }, [auth0Config]);
 
     async function onSubmit(event: React.FormEvent<LoginFormElement>) {
         event.preventDefault()
+
+        if (!webClient || !auth0Config) {
+            console.log("no web client");
+            return
+        }
+
+        webClient.login({
+                username: event.currentTarget.email.value,
+                password: event.currentTarget.password.value,
+                realm: auth0Config.connection || 'Users'
+            },
+            (err) => {
+                if (err) {
+                    setErrorMessage(err.policy || err.description || '');
+                    setIsLoading(false);
+                }
+            });
+
         setIsLoading(true)
 
         setTimeout(() => {
             setIsLoading(false)
         }, 3000)
+    }
 
-        createAuthClient(config).login({
-                username: event.currentTarget.email.value,
-                password: event.currentTarget.password.value,
-                realm: 'Users'
-            },
-            (err) => {
-                if (err)
-                    setErrorMessage(err.policy || err.description || '');
-            });
+    function renderSocials(): ReactNode {
+        if (!clientConfig || clientConfig?.strategies.length === 0)
+            return (<></>);
+
+        const socials = Array<ReactNode>();
+
+        for (let s of clientConfig.strategies) {
+            if (s.name === "auth0")
+                continue;
+
+            for (let c of s.connections) {
+                switch (c.name) {
+                    case "google-oauth2":
+                        socials.push(
+                            <Button variant="outline" type="button" disabled={isLoading}>
+                                {isLoading ? (
+                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
+                                ) : (
+                                    <Icons.google className="mr-2 h-4 w-4"/>
+                                )}{" "}
+                                Google
+                            </Button>
+                        );
+                        continue;
+                    case "github":
+                        socials.push(
+                            <Button variant="outline" type="button" disabled={isLoading}>
+                                {isLoading ? (
+                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
+                                ) : (
+                                    <Icons.gitHub className="mr-2 h-4 w-4"/>
+                                )}{" "}
+                                Github
+                            </Button>
+                        );
+                }
+            }
+        }
+
+        if (socials.length === 0)
+            return (<></>);
+
+        return (
+            <>
+                <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t"/>
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Or continue with
+          </span>
+                    </div>
+                </div>
+                {socials}
+            </>
+        )
     }
 
     return (
@@ -94,24 +238,9 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                     </Button>
                 </div>
             </form>
-            <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t"/>
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-                </div>
-            </div>
-            <Button variant="outline" type="button" disabled={isLoading}>
-                {isLoading ? (
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
-                ) : (
-                    <Icons.gitHub className="mr-2 h-4 w-4"/>
-                )}{" "}
-                Github
-            </Button>
+            {clientConfig &&
+                renderSocials()
+            }
         </div>
     )
 }
