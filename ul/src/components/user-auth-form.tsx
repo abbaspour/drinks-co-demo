@@ -109,7 +109,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
 
     }, [auth0Config]);
 
-    async function onSubmit(event: React.FormEvent<LoginFormElement>) {
+    async function onCredentialsSubmit(event: React.FormEvent<LoginFormElement>) {
         event.preventDefault()
 
         if (!webClient || !auth0Config) {
@@ -124,7 +124,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
             },
             (err) => {
                 if (err) {
-                    setErrorMessage(err.policy || err.description || '');
+                    setErrorMessage(err.policy || err.description || 'unknown error');
                     setIsLoading(false);
                 }
             });
@@ -134,6 +134,11 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
         setTimeout(() => {
             setIsLoading(false)
         }, 3000)
+    }
+
+    function onFederatedSubmit(connection: string) {
+        webClient &&
+        webClient.authorize({connection});
     }
 
     function renderSocials(): ReactNode {
@@ -150,7 +155,8 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                 switch (c.name) {
                     case "google-oauth2":
                         socials.push(
-                            <Button variant="outline" type="button" disabled={isLoading}>
+                            <Button variant="outline" type="button" disabled={isLoading}
+                                    onClick={() => onFederatedSubmit(c.name)}>
                                 {isLoading ? (
                                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                                 ) : (
@@ -200,7 +206,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
             {errorMessage &&
                 <div className="error"> {errorMessage} </div>
             }
-            <form onSubmit={onSubmit}>
+            <form onSubmit={onCredentialsSubmit}>
                 <div className="grid gap-2">
                     <div className="grid gap-1">
                         <Label className="sr-only" htmlFor="email">

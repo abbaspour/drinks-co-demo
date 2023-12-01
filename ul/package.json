@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && fgrep --color -o '@@config@@' ../public/ul/index.html && echo 'build successful' || echo >&2 'ERROR: build incompatible' ",
+    "build": "next build && fgrep -q '@@config@@' ../public/ul/index.html && echo 'build successful' || echo >&2 'ERROR: build incompatible' ",
     "start": "next start",
     "lint": "next lint"
   },
