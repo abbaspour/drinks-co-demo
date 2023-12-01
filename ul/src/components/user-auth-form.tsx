@@ -88,16 +88,12 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
             return;
 
         const fetchClientJs = async (): Promise<ClientConfig> => {
-            const url = `https://${auth0Config.auth0Domain}/client/${auth0Config.clientID}.js`;
-            console.log('fetching client config from : ' + url)
-            const response = await window.fetch(url);
+            const response = await window.fetch(`https://${auth0Config.auth0Domain}/client/${auth0Config.clientID}.js`);
             const clientJs = await response.text();
-            console.log(clientJs);
             const matched = clientJs.match(CLIENT_JS_REGEX);
             if (!matched || matched.length === 0)
                 return Promise.reject("no match");
             const clientJson = matched[1];
-            console.log(clientJson);
             return JSON.parse(clientJson)
         }
 
@@ -141,6 +137,28 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
         webClient.authorize({connection});
     }
 
+    const icon = (connection: string): ReactNode => {
+        switch (connection) {
+            case "google-oauth2":
+                return <Icons.google className="mr-2 h-4 w-4"/>;
+            case "github":
+                return <Icons.gitHub className="mr-2 h-4 w-4"/>;
+            case "apple":
+                return <Icons.apple className="mr-2 h-4 w-4"/>;
+            case "paypal":
+                return <Icons.paypal className="mr-2 h-4 w-4"/>;
+            case "twitter":
+                return <Icons.twitter className="mr-2 h-4 w-4"/>;
+            case "facebook":
+                return <Icons.facebook className="mr-2 h-4 w-4"/>;
+            default:
+                return <Icons.npm className="mr-2 h-4 w-4"/>;
+        }
+    }
+
+    const name = (connection: string): string =>
+                connection.charAt(0).toUpperCase() + connection.slice(1);
+
     function renderSocials(): ReactNode {
         if (!clientConfig || clientConfig?.strategies.length === 0)
             return (<></>);
@@ -152,32 +170,17 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                 continue;
 
             for (let c of s.connections) {
-                switch (c.name) {
-                    case "google-oauth2":
-                        socials.push(
-                            <Button variant="outline" type="button" disabled={isLoading}
-                                    onClick={() => onFederatedSubmit(c.name)}>
-                                {isLoading ? (
-                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
-                                ) : (
-                                    <Icons.google className="mr-2 h-4 w-4"/>
-                                )}{" "}
-                                Google
-                            </Button>
-                        );
-                        continue;
-                    case "github":
-                        socials.push(
-                            <Button variant="outline" type="button" disabled={isLoading}>
-                                {isLoading ? (
-                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
-                                ) : (
-                                    <Icons.gitHub className="mr-2 h-4 w-4"/>
-                                )}{" "}
-                                Github
-                            </Button>
-                        );
-                }
+                socials.push(
+                    <Button variant="outline" type="button" disabled={isLoading}
+                            onClick={() => onFederatedSubmit(c.name)}>
+                        {isLoading ? (
+                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
+                        ) : (
+                            icon(c.name)
+                        )}{" "}
+                        {name(c.name)}
+                    </Button>
+                );
             }
         }
 
