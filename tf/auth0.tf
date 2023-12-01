@@ -29,6 +29,22 @@ resource "auth0_connection" "users" {
   }
 }
 
+resource "auth0_connection" "google" {
+  name = "google-oauth2"
+  strategy = "google-oauth2"
+
+  options {
+  }
+}
+
+resource "auth0_connection" "facebook" {
+  name = "facebook"
+  strategy = "facebook"
+
+  options {
+  }
+}
+
 # Beans Blend client
 resource "auth0_client" "beans_blend" {
   name = "Beans Blend"
@@ -97,10 +113,20 @@ EOF
 }
 
 
-# Central DB
-resource "auth0_connection_clients" "brands_central_user_store" {
+# Connection vs Clients
+resource "auth0_connection_clients" "users_clients" {
   connection_id   = auth0_connection.users.id
   enabled_clients = [auth0_client.beans_blend.id, auth0_client.fizzy_fusion.id, var.auth0_tf_client_id]
+}
+
+resource "auth0_connection_clients" "google_clients" {
+  connection_id   = auth0_connection.google.id
+  enabled_clients = [auth0_client.beans_blend.id, auth0_client.fizzy_fusion.id]
+}
+
+resource "auth0_connection_clients" "facebook_clients" {
+  connection_id   = auth0_connection.facebook.id
+  enabled_clients = [auth0_client.beans_blend.id]
 }
 
 resource "auth0_branding" "brand" {
@@ -121,14 +147,14 @@ resource "auth0_pages" "classic" {
 
 ## Users
 resource "auth0_user" "user_1" {
-  depends_on = [auth0_connection_clients.brands_central_user_store]
+  depends_on = [auth0_connection_clients.users_clients]
   connection_name = auth0_connection.users.name
   email = "user1@atko.email"
   password = var.default_password
 }
 
 resource "auth0_user" "user_2" {
-  depends_on = [auth0_connection_clients.brands_central_user_store]
+  depends_on = [auth0_connection_clients.users_clients]
   connection_name = auth0_connection.users.name
   email = "user2@atko.email"
   password = var.default_password

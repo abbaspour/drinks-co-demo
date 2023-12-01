@@ -50,30 +50,13 @@ export const parseAuth0Config = (config: string): Auth0Config => {
     return JSON.parse(decodeURIComponent(window.atob(config)));
 }
 
-const createAuthClient = (config: string): WebAuth => {
+const createAuthClient = (auth0Config: Auth0Config): WebAuth | null => {
 
     //console.log(`config: ${config}`);
 
-    let auth0Config: any = {};
-
-    try {
-        auth0Config = JSON.parse(decodeURIComponent(window.atob(config)));
-    } catch (error) {
-        throw error;
-    }
-
     if (!auth0Config?.auth0Tenant) {
-        throw new Error('Invalid Auth0 config.');
-    }
-
-    const leeway = auth0Config?.internalOptions?.leeway;
-
-    if (leeway) {
-        const convertedLeeway = Number.parseInt(leeway);
-
-        if (!Number.isNaN(convertedLeeway)) {
-            auth0Config.internalOptions.leeway = convertedLeeway;
-        }
+        console.log('Invalid Auth0 config.');
+        return null;
     }
 
     const params = {
