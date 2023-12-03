@@ -26,6 +26,13 @@ type  AuthorizationServer = {
     issuer: string
 }
 
+type DictionaryMap = {
+    [key : string]: string
+}
+type Dictionary = {
+    signin?: DictionaryMap
+}
+
 export interface Auth0Config {
     icon: string,
     assetsUrl: string,
@@ -36,8 +43,8 @@ export interface Auth0Config {
     callbackURL: string,
     cdn: string,
     clientID: string,
-    connection: string | null,
-    dict: object,
+    connection?: string,
+    dict?: Dictionary,
     extraParams: object,
     internalOptions: InternalOptions,
     widgetUrl: string,

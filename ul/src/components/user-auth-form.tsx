@@ -244,6 +244,9 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                         )}
                         Sign In
+                        {auth0Config &&
+                            auth0Config?.dict?.signin?.title ? ` to ${auth0Config.dict.signin.title}` : ''
+                        }
                     </Button>
                 </div>
             </form>
