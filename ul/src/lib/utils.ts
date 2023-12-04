@@ -29,8 +29,13 @@ type  AuthorizationServer = {
 type DictionaryMap = {
     [key : string]: string
 }
+
 type Dictionary = {
     signin?: DictionaryMap
+}
+
+type ExtraParams = {
+    [key : string]: string
 }
 
 export interface Auth0Config {
@@ -45,7 +50,7 @@ export interface Auth0Config {
     clientID: string,
     connection?: string,
     dict?: Dictionary,
-    extraParams: object,
+    extraParams: ExtraParams,
     internalOptions: InternalOptions,
     widgetUrl: string,
     isThirdPartyClient: boolean,
@@ -59,7 +64,7 @@ export const parseAuth0Config = (config: string): Auth0Config => {
 
 const createAuthClient = (auth0Config: Auth0Config): WebAuth | null => {
 
-    //console.log(`config: ${config}`);
+    console.log(auth0Config);
 
     if (!auth0Config?.auth0Tenant) {
         console.log('Invalid Auth0 config.');

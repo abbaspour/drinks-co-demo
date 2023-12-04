@@ -106,7 +106,8 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
     }, [auth0Config]);
 
     async function onCredentialsSubmit(event: React.FormEvent<LoginFormElement>) {
-        event.preventDefault()
+
+        event.preventDefault();
 
         if (!webClient || !auth0Config) {
             console.log("no web client");
@@ -132,7 +133,13 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
         }, 3000)
     }
 
-    function onFederatedSubmit(connection: string) {
+    async function onFederatedSubmit(connection: string) {
+        setIsLoading(true)
+
+        setTimeout(() => {
+            setIsLoading(false)
+        }, 3000)
+
         webClient &&
         webClient.authorize({connection});
     }
@@ -157,7 +164,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
     }
 
     const name = (connection: string): string =>
-                connection.charAt(0).toUpperCase() + connection.slice(1);
+        connection.charAt(0).toUpperCase() + connection.slice(1);
 
     function renderSocials(): ReactNode {
         if (!clientConfig || clientConfig?.strategies.length === 0)
@@ -206,6 +213,17 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
 
     return (
         <div className={cn("grid gap-6", className)} {...props}>
+            <div className="flex flex-col space-y-2 text-center">
+                <h1 className="text-2xl font-semibold tracking-tight">
+                    Sign In
+                    {auth0Config &&
+                    auth0Config?.dict?.signin?.title ? ` to ${auth0Config.dict.signin.title}` : ''
+                    }
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                    Enter your credentials below
+                </p>
+            </div>
             {errorMessage &&
                 <div className="error"> {errorMessage} </div>
             }
@@ -217,7 +235,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                         </Label>
                         <Input
                             id="email"
-                            placeholder=""
+                            placeholder={auth0Config && auth0Config?.extraParams?.login_hint}
                             type="email"
                             autoCapitalize="none"
                             autoComplete="email"
@@ -231,7 +249,6 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                         </Label>
                         <Input
                             id="password"
-                            placeholder=""
                             type="password"
                             autoCapitalize="none"
                             autoComplete="off"
@@ -239,14 +256,11 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                             disabled={isLoading}
                         />
                     </div>
-                    <Button variant="outline" type="button" disabled={isLoading}>
+                    <Button variant="outline" type="submit" disabled={isLoading}>
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                         )}
                         Sign In
-                        {auth0Config &&
-                            auth0Config?.dict?.signin?.title ? ` to ${auth0Config.dict.signin.title}` : ''
-                        }
                     </Button>
                 </div>
             </form>
