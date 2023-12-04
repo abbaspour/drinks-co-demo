@@ -3,7 +3,7 @@ const nextConfig = {
     output: "export",
     distDir: "../public/ul",
     cleanDistDir: true,
-    productionBrowserSourceMaps: true,
+    productionBrowserSourceMaps: false,
     assetPrefix: "https://drinks-co.vercel.app/ul"
 }
 

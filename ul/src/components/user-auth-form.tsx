@@ -7,9 +7,11 @@ import {Icons} from "@/components/icons"
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert"
 import {createAuthClient} from "@/lib/utils";
 import {ReactNode, useEffect} from "react";
 import {WebAuth} from "auth0-js";
+import {AlertCircle} from "lucide-react";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     config: string
@@ -164,7 +166,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
     }
 
     const name = (connection: string): string =>
-        connection.charAt(0).toUpperCase() + connection.slice(1);
+        connection.charAt(0).toUpperCase() + connection.split('-')[0].slice(1);
 
     function renderSocials(): ReactNode {
         if (!clientConfig || clientConfig?.strategies.length === 0)
@@ -225,7 +227,13 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                 </p>
             </div>
             {errorMessage &&
-                <div className="error"> {errorMessage} </div>
+                <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4"/>
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>
+                        {errorMessage}
+                    </AlertDescription>
+                </Alert>
             }
             <form onSubmit={onCredentialsSubmit}>
                 <div className="grid gap-2">
@@ -264,7 +272,8 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                     </Button>
                 </div>
             </form>
-            {clientConfig &&
+            {
+                clientConfig &&
                 renderSocials()
             }
         </div>
