@@ -16,30 +16,32 @@ export function ClientLogo({className, config, ...props}: ClientLogoProps) {
     }, [config]);
 
     return (
-        <div>
-            {auth0Config?.clientID &&
-                <img
-                    src={`https://drinks-co.vercel.app/logo/${auth0Config.clientID}.png`}
-                    alt="Client Logo"
-                    className="block dark:hidden"
-                />
-            }
+        <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+            <div className="absolute inset-0 bg-zinc-900">
+                {auth0Config?.clientID &&
+                    <img
+                        src={`https://drinks-co.vercel.app/logo/${auth0Config.clientID}.png`}
+                        width={1280}
+                        height={843}
+                        alt="Client Logo"
+                        className="block dark:hidden"
+                    />
+                }
+            </div>
+            <div className="relative z-20 flex items-center text-lg font-medium">
+                {auth0Config &&
+                    auth0Config?.dict?.signin?.title
+                }
+            </div>
+            <div className="relative z-20 mt-auto">
+                <blockquote className="space-y-2">
+                    <p className="text-lg">
+                        Crafting Moments, Pouring Joy.
+                    </p>
+                </blockquote>
+            </div>
         </div>
+
     );
 
-    /*
-            <div className={cn("grid gap-6", className)} {...props}>
-                {auth0Config &&
-                    auth0Config.clientID
-                }
-                <Image
-                    src="/examples/authentication-light.png"
-                    width={1280}
-                    height={843}
-                    alt="Authentication"
-                    className="block dark:hidden"
-                />
-            </div>
-        );
-    */
 }
