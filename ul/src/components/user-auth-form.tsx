@@ -11,9 +11,12 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert"
 import {createAuthClient} from "@/lib/utils";
 import {ReactNode, useEffect} from "react";
 import {WebAuth} from "auth0-js";
-import {AlertCircle} from "lucide-react";
+import {AlertCircle, CalendarIcon} from "lucide-react";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar"
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover"
+import {format} from "date-fns";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     config: string
@@ -76,6 +79,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
     const [auth0Config, setAuth0Config] = React.useState<Auth0Config>();
     const [clientConfig, setClientConfig] = React.useState<ClientConfig>();
     const [webClient, setWebClient] = React.useState<WebAuth>();
+    const [date, setDate] = React.useState<Date>();
 
     useEffect(() => {
         const parsed = parseAuth0Config(config);
@@ -120,6 +124,10 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
         const email = event.currentTarget.email.value;
         const password = event.currentTarget.password.value;
         const connection = auth0Config.connection || 'Users';
+        const userMetadata : {[key: string]: string} = {};
+
+        if(date)
+            userMetadata["dob"] = date.toISOString();
 
         console.log(`sign-up & login: ${email} / ${password}`);
 
@@ -128,7 +136,8 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
         webClient.signup({
                 email,
                 password,
-                connection
+                connection,
+                userMetadata
             },
             (err) => {
                 if (err) {
@@ -292,7 +301,6 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                 <TabsContent value="log-in">
                     <Card>
                         <CardHeader>
-                            {/*<CardTitle>Log In</CardTitle>*/}
                             <CardDescription>
                                 <p className="text-sm text-muted-foreground">
                                     Enter your email and password below
@@ -349,7 +357,6 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                 <TabsContent value="sign-up">
                     <Card>
                         <CardHeader>
-                            {/*<CardTitle>Sign Up</CardTitle>*/}
                             <CardDescription>
                                 <p className="text-sm text-muted-foreground">
                                     Enter your details below
@@ -368,7 +375,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                                             placeholder=""
                                             type="email"
                                             autoCapitalize="none"
-                                            autoComplete="email"
+                                            autoComplete="false"
                                             autoCorrect="off"
                                             spellCheck="false"
                                             disabled={isLoading}
@@ -388,6 +395,33 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                                             disabled={isLoading}
                                         />
                                     </div>
+                                    {auth0Config &&
+                                        auth0Config?.dict?.signin?.title === "Fizzy Fusion" &&
+                                        <div className="grid gap-1">
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "justify-start text-left font-normal",
+                                                            !date && "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                                        {date ? format(date, "PPP") : <span>Date of Birth</span>}
+                                                    </Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-0">
+                                                    <Calendar
+                                                        mode="single"
+                                                        selected={date}
+                                                        onSelect={setDate}
+                                                        initialFocus
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                        </div>
+                                    }
                                     <Button variant="outline" type="submit" disabled={isLoading}>
                                         {isLoading && (
                                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>

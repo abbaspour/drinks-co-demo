@@ -1,8 +1,8 @@
 {
-  "id": "VJIEWAptlFWokl2pRC2ptswic1jCGoEC",
+  "id": "VJIEWAptlxxxxxswic1jCGoEC",
   "tenant": "abbaspour",
   "subscription": "enterprise",
-  "authorize": "https://abbaspour.auth0.com/authorize",
+  "authorize": "https://xxxx.auth0.com/authorize",
   "callback": "https://jwt.io",
   "hasAllowedOrigins": true,
   "strategies": [
@@ -10,7 +10,7 @@
       "name": "auth0",
       "connections": [
         {
-          "name": "AusPostUserCreds",
+          "name": "Users",
           "passwordPolicy": "low",
           "password_complexity_options": {
             "min_length": 8
