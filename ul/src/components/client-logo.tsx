@@ -20,7 +20,7 @@ export function ClientLogo({className, config, ...props}: ClientLogoProps) {
             <div className="absolute inset-0 bg-zinc-900">
                 {auth0Config?.clientID &&
                     <img
-                        src={`https://drinks-co.vercel.app/logo/${auth0Config.clientID}.png`}
+                        src={`https://drinks-co.vercel.app/client/${auth0Config.clientID}.png`}
                         width={1280}
                         height={843}
                         alt="Client Logo"

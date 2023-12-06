@@ -129,7 +129,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
         if(date)
             userMetadata["dob"] = date.toISOString();
 
-        console.log(`sign-up & login: ${email} / ${password}`);
+        //console.log(`sign-up & login: ${email} / ${password}`);
 
         setIsLoading(true)
 
