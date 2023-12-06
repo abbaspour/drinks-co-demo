@@ -12,6 +12,8 @@ import {createAuthClient} from "@/lib/utils";
 import {ReactNode, useEffect} from "react";
 import {WebAuth} from "auth0-js";
 import {AlertCircle} from "lucide-react";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     config: string
@@ -107,6 +109,51 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
 
     }, [auth0Config]);
 
+    async function onSignUpSubmit(event: React.FormEvent<LoginFormElement>) {
+        event.preventDefault();
+
+        if (!webClient || !auth0Config) {
+            console.log("no web client");
+            return
+        }
+
+        const email = event.currentTarget.email.value;
+        const password = event.currentTarget.password.value;
+        const connection = auth0Config.connection || 'Users';
+
+        console.log(`sign-up & login: ${email} / ${password}`);
+
+        setIsLoading(true)
+
+        webClient.signup({
+                email,
+                password,
+                connection
+            },
+            (err) => {
+                if (err) {
+                    setErrorMessage(err.policy || err.description || 'unknown error');
+                    setIsLoading(false);
+                } else {
+                    webClient.login({
+                        username: email,
+                        password,
+                        realm: connection
+                    }, (err) => {
+                        if (err) {
+                            setErrorMessage(err.policy || err.description || 'unknown error');
+                            setIsLoading(false);
+                        }
+                    });
+                }
+            });
+
+        setTimeout(() => {
+            setIsLoading(false)
+        }, 3000)
+
+    }
+
     async function onCredentialsSubmit(event: React.FormEvent<LoginFormElement>) {
 
         event.preventDefault();
@@ -197,7 +244,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
             return (<></>);
 
         return (
-            <>
+            <div className="flex flex-col">
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t"/>
@@ -209,7 +256,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                     </div>
                 </div>
                 {socials}
-            </>
+            </div>
         )
     }
 
@@ -217,14 +264,16 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
         <div className={cn("grid gap-6", className)} {...props}>
             <div className="flex flex-col space-y-2 text-center">
                 <h1 className="text-2xl font-semibold tracking-tight">
-                    Sign In
+                    Welcome
                     {auth0Config &&
                     auth0Config?.dict?.signin?.title ? ` to ${auth0Config.dict.signin.title}` : ''
                     }
                 </h1>
+                {/*
                 <p className="text-sm text-muted-foreground">
                     Enter your credentials below
                 </p>
+                */}
             </div>
             {errorMessage &&
                 <Alert variant="destructive">
@@ -235,47 +284,122 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                     </AlertDescription>
                 </Alert>
             }
-            <form onSubmit={onCredentialsSubmit}>
-                <div className="grid gap-2">
-                    <div className="grid gap-1">
-                        <Label className="sr-only" htmlFor="email">
-                            Email
-                        </Label>
-                        <Input
-                            id="email"
-                            placeholder={auth0Config && auth0Config?.extraParams?.login_hint}
-                            type="email"
-                            autoCapitalize="none"
-                            autoComplete="email"
-                            autoCorrect="off"
-                            disabled={isLoading}
-                        />
-                    </div>
-                    <div className="grid gap-1">
-                        <Label className="sr-only" htmlFor="password">
-                            Password
-                        </Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            autoCapitalize="none"
-                            autoComplete="off"
-                            autoCorrect="off"
-                            disabled={isLoading}
-                        />
-                    </div>
-                    <Button variant="outline" type="submit" disabled={isLoading}>
-                        {isLoading && (
-                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
-                        )}
-                        Sign In
-                    </Button>
-                </div>
-            </form>
-            {
-                clientConfig &&
-                renderSocials()
-            }
+            <Tabs defaultValue="log-in" className="w-[400px]">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="log-in">Log In</TabsTrigger>
+                    <TabsTrigger value="sign-up">Sign Up</TabsTrigger>
+                </TabsList>
+                <TabsContent value="log-in">
+                    <Card>
+                        <CardHeader>
+                            {/*<CardTitle>Log In</CardTitle>*/}
+                            <CardDescription>
+                                <p className="text-sm text-muted-foreground">
+                                    Enter your email and password below
+                                </p>
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                            <form onSubmit={onCredentialsSubmit}>
+                                <div className="grid gap-2">
+                                    <div className="grid gap-1">
+                                        <Label className="sr-only" htmlFor="email">
+                                            Email
+                                        </Label>
+                                        <Input
+                                            id="email"
+                                            placeholder={auth0Config && auth0Config?.extraParams?.login_hint}
+                                            type="email"
+                                            autoCapitalize="none"
+                                            autoComplete="email"
+                                            autoCorrect="off"
+                                            spellCheck="false"
+                                            disabled={isLoading}
+                                        />
+                                    </div>
+                                    <div className="grid gap-1">
+                                        <Label className="sr-only" htmlFor="password">
+                                            Password
+                                        </Label>
+                                        <Input
+                                            id="password"
+                                            type="password"
+                                            autoCapitalize="none"
+                                            autoComplete="off"
+                                            autoCorrect="off"
+                                            spellCheck="false"
+                                            disabled={isLoading}
+                                        />
+                                    </div>
+                                    <Button variant="outline" type="submit" disabled={isLoading}>
+                                        {isLoading && (
+                                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
+                                        )}
+                                        Sign In
+                                    </Button>
+                                </div>
+                            </form>
+                            {
+                                clientConfig &&
+                                renderSocials()
+                            }
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                <TabsContent value="sign-up">
+                    <Card>
+                        <CardHeader>
+                            {/*<CardTitle>Sign Up</CardTitle>*/}
+                            <CardDescription>
+                                <p className="text-sm text-muted-foreground">
+                                    Enter your details below
+                                </p>
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                            <form onSubmit={onSignUpSubmit}>
+                                <div className="grid gap-2">
+                                    <div className="grid gap-1">
+                                        <Label className="sr-only" htmlFor="email">
+                                            Email
+                                        </Label>
+                                        <Input
+                                            id="email"
+                                            placeholder=""
+                                            type="email"
+                                            autoCapitalize="none"
+                                            autoComplete="email"
+                                            autoCorrect="off"
+                                            spellCheck="false"
+                                            disabled={isLoading}
+                                        />
+                                    </div>
+                                    <div className="grid gap-1">
+                                        <Label className="sr-only" htmlFor="password">
+                                            Password
+                                        </Label>
+                                        <Input
+                                            id="password"
+                                            type="password"
+                                            autoCapitalize="none"
+                                            autoComplete="off"
+                                            autoCorrect="off"
+                                            spellCheck="false"
+                                            disabled={isLoading}
+                                        />
+                                    </div>
+                                    <Button variant="outline" type="submit" disabled={isLoading}>
+                                        {isLoading && (
+                                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
+                                        )}
+                                        Sign Up
+                                    </Button>
+                                </div>
+                            </form>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+            </Tabs>
         </div>
     )
 }
