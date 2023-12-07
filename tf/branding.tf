@@ -53,8 +53,16 @@ resource "auth0_email_template" "email_verification_link" {
 
   body     = local_file.email_verification_link_template.content
   enabled  = true
-  from     = "noreply@drinks.co"  # todo: liquid
-  subject  = "email verification" # todo: liquid
+  from     = "Verify your email for {{ application.name }} <verify@drinks.co>"
+  subject  = <<EOL
+{% if application.clientID == "${auth0_client.beans_blend.client_id}" %}
+Verify your email for Beans Blend
+{% elsif application.clientID == "${auth0_client.fizzy_fusion.client_id}" %}
+Verify your email for Fizzy Fusion
+{% else %}
+Verify your email for Drinks Co
+{% endif %}
+EOL
   syntax   = "liquid"
   template = "verify_email"
 }
@@ -90,8 +98,16 @@ resource "auth0_email_template" "welcome" {
 
   body     = local_file.welcome_template.content
   enabled  = true
-  from     = "noreply@drinks.co"  # todo: liquid
-  subject  = "Welcome Email"      # todo: liquid
+  from     = "Welcome to {{ application.name }} <welcome@drinks.co>"
+  subject  = <<EOL
+{% if application.clientID == "${auth0_client.beans_blend.client_id}" %}
+Welcome to Beans Blend
+{% elsif application.clientID == "${auth0_client.fizzy_fusion.client_id}" %}
+Welcome to Fizzy Fusion
+{% else %}
+Welcome to Drinks Co
+{% endif %}
+EOL
   syntax   = "liquid"
   template = "welcome_email"
 }

@@ -127,7 +127,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
         const userMetadata : {[key: string]: string} = {};
 
         if(date)
-            userMetadata["dob"] = date.toISOString();
+            userMetadata["dob"] = format(date, 'yyyy-MM-dd');
 
         //console.log(`sign-up & login: ${email} / ${password}`);
 
@@ -331,6 +331,7 @@ export function UserAuthForm({className, config, ...props}: UserAuthFormProps) {
                                         </Label>
                                         <Input
                                             id="password"
+                                            placeholder="Password"
                                             type="password"
                                             autoCapitalize="none"
                                             autoComplete="off"
