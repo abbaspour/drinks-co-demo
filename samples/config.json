@@ -1,0 +1,47 @@
+{
+  "icon": "https://drinks-co.vercel.app/img/drinks-co-logo.png",
+  "assetsUrl": "",
+  "auth0Domain": "drinks-co.us.auth0.com",
+  "auth0Tenant": "drinks-co",
+  "clientConfigurationBaseUrl": "https://drinks-co.us.auth0.com/",
+  "callbackOnLocationHash": false,
+  "callbackURL": "https://jwt.io",
+  "cdn": "https://cdn.auth0.com/",
+  "clientID": "FCRaVSyQrfphGLNU221B4gwzLOldUVe8",
+  "connection": "Users",
+  "dict": {
+    "signin": {
+      "title": "Beans Blend"
+    }
+  },
+  "extraParams": {
+    "protocol": "oauth2",
+    "response_type": "id_token",
+    "nonce": "nonce",
+    "prompt": "login",
+    "login_hint": "user1@atko.email",
+    "_csrf": "z9bcXLz9-wbbIU1vHS_7r0iG1hLYHFw0KHOI",
+    "_intstate": "deprecated",
+    "state": "hKFo2SBsT20tWFVJWjVKblIyTFlPYzdQalliRVBUbTg0OUtOQ6FupWxvZ2luo3RpZNkgQkxQR016TzQyWVFleVZ3c3BFcWJQWHp5NFE0N2pfQ1CjY2lk2SBGQ1JhVlN5UXJmcGhHTE5VMjIxQjRnd3pMT2xkVVZlOA"
+  },
+  "internalOptions": {
+    "protocol": "oauth2",
+    "response_type": "id_token",
+    "nonce": "nonce",
+    "prompt": "login",
+    "login_hint": "user1@atko.email",
+    "_csrf": "z9bcXLz9-wbbIU1vHS_7r0iG1hLYHFw0KHOI",
+    "_intstate": "deprecated",
+    "state": "hKFo2SBsT20tWFVJWjVKblIyTFlPYzdQalliRVBUbTg0OUtOQ6FupWxvZ2luo3RpZNkgQkxQR016TzQyWVFleVZ3c3BFcWJQWHp5NFE0N2pfQ1CjY2lk2SBGQ1JhVlN5UXJmcGhHTE5VMjIxQjRnd3pMT2xkVVZlOA"
+  },
+  "widgetUrl": "https://cdn.auth0.com/w2/auth0-widget-5.2.min.js",
+  "isThirdPartyClient": false,
+  "authorizationServer": {
+    "url": "https://drinks-co.us.auth0.com",
+    "issuer": "https://drinks-co.us.auth0.com/"
+  },
+  "colors": {
+    "page_background": "#0D47A1",
+    "primary": "#B0BEC5"
+  }
+}

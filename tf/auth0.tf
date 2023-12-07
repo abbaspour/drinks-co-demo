@@ -52,7 +52,7 @@ resource "auth0_client" "beans_blend" {
   app_type = "spa"
   oidc_conformant = true
   is_first_party = true
-  logo_uri = "https://drinks-co.vercel.app/img/beans-blend-logo.png"
+  logo_uri = "https://drinks-co.vercel.app/img/beans-blend-img.png"
 
   callbacks = [
     "https://jwt.io",
@@ -86,7 +86,7 @@ resource "auth0_client" "fizzy_fusion" {
   app_type = "spa"
   oidc_conformant = true
   is_first_party = true
-  logo_uri = "https://drinks-co.vercel.app/img/fizzy-fusion-logo.png"
+  logo_uri = "https://drinks-co.vercel.app/img/fizzy-fusion-img.png"
 
   callbacks = [
     "https://jwt.io",
@@ -130,7 +130,7 @@ resource "auth0_connection_clients" "facebook_clients" {
 }
 
 resource "auth0_branding" "brand" {
-  logo_url = "https://drinks-co.vercel.app/img/drinks-co-logo.png"
+  logo_url = "https://drinks-co.vercel.app/img/drinks-co-img.png"
   colors {
     primary         = "#B0BEC5"
     page_background = "#0D47A1"

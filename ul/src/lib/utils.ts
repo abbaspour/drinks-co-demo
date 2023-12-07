@@ -59,12 +59,13 @@ export interface Auth0Config {
 }
 
 export const parseAuth0Config = (config: string): Auth0Config => {
+    //console.log(`@@config@@: ${config}`);
     return JSON.parse(decodeURIComponent(window.atob(config)));
 }
 
 const createAuthClient = (auth0Config: Auth0Config): WebAuth | null => {
 
-    console.log(auth0Config);
+    //console.log(auth0Config);
 
     if (!auth0Config?.auth0Tenant) {
         console.log('Invalid Auth0 config.');

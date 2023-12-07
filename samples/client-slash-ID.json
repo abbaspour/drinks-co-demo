@@ -1,0 +1,72 @@
+{
+  "id": "VJIEWAptlxxxxxswic1jCGoEC",
+  "tenant": "abbaspour",
+  "subscription": "enterprise",
+  "authorize": "https://xxxx.auth0.com/authorize",
+  "callback": "https://jwt.io",
+  "hasAllowedOrigins": true,
+  "strategies": [
+    {
+      "name": "auth0",
+      "connections": [
+        {
+          "name": "Users",
+          "passwordPolicy": "low",
+          "password_complexity_options": {
+            "min_length": 8
+          },
+          "showSignup": true,
+          "showForgot": true,
+          "requires_username": false
+        }
+      ]
+    },
+    {
+      "name": "email",
+      "connections": [
+        {
+          "name": "email"
+        }
+      ]
+    },
+    {
+      "name": "google-oauth2",
+      "connections": [
+        {
+          "name": "google-oauth2",
+          "scope": [
+            "email",
+            "https://mail.google.com/mail/feed/atom",
+            "profile"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "samlp",
+      "connections": [
+        {
+          "name": "Amin-JP-SAML",
+          "domain": "japan.com",
+          "domain_aliases": [
+            "japan.com"
+          ]
+        },
+        {
+          "name": "amin03"
+        }
+      ]
+    },
+    {
+      "name": "windowslive",
+      "connections": [
+        {
+          "name": "windowslive",
+          "scope": [
+            "https://graph.microsoft.com/User.Read"
+          ]
+        }
+      ]
+    }
+  ]
+}
