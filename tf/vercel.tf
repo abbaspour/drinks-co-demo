@@ -5,8 +5,6 @@ resource "vercel_project" "drinks_co" {
 
 data "vercel_project_directory" "public_files" {
   depends_on = [
-    local_file.beans_blend_css,
-    local_file.fizzy_fusion_css,
     local_file.beans_blend_logo,
     local_file.fizzy_fusion_logo
   ]

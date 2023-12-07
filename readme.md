@@ -7,7 +7,9 @@ Branding format is as follows
 * [Drinks Co](https://drinks-co.vercel.app) is the holding and has two child brands. Users are stored here.
   * [Beans Blend](https://beans-blend.vercel.app) produces coffee and tea beverages 
   * [Fizzy Fusion](https://fizzy-fusion.vercel.app) produces fizzy soft drinks
-  
+
+## Video Demo
+[![demo](screenshots/video.png)](https://zoom.us/clips/share/jlPe-LMOUEK_eHyP3JhWNjCtkU2oQNlVXIfBvVJ29j-iHHd-vDodt3LCryyUbvysREC9ii12iikD2-QZ68kxKNEE.mGRbhlPYbEf17VyB)
 
 ## Screenshots
 ### Login Page
